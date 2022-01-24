@@ -19,7 +19,8 @@ public class Configuration {
         this.disablePlayerTrampling = this.config.getBool("disable-player-trampling", true);
         this.farmlandBlocks = new ArrayList<>();
         ((List<String>) this.config.getValue("farmlands-blocks", Arrays.asList(new String[]{"FARMLAND", "SOIL"}))).forEach(string -> {
-            farmlandBlocks.add(Material.getMaterial(string));
+            if (isValid(string))
+                farmlandBlocks.add(Material.getMaterial(string));
         });
     }
 
@@ -37,6 +38,10 @@ public class Configuration {
 
     public boolean isPlayerTramplingDisabled() {
         return this.disablePlayerTrampling;
+    }
+
+    private boolean isValid(String material) {
+        return Material.getMaterial(material) != null;
     }
 
 }

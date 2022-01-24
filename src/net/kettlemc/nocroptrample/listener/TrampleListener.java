@@ -45,4 +45,5 @@ public class TrampleListener implements Listener {
         if ((plugin.getConfiguration().isMobTramplingDisabled() && event.getCause() == CropTrampleEvent.TrampleCause.MOB) || (plugin.getConfiguration().isPlayerTramplingDisabled() && event.getCause() == CropTrampleEvent.TrampleCause.PLAYER))
             event.setCancelled(true);
     }
+
 }
