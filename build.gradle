@@ -1,0 +1,140 @@
+import org.apache.tools.ant.filters.ReplaceTokens
+
+apply plugin: 'java-library'
+apply plugin: 'java'
+
+libsDirName = System.getenv("libsDirName") == null ? libsDirName : System.getenv("libsDirName")
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
+compileJava.options.encoding = 'UTF-8'
+
+sourceSets {
+    main {
+        java {
+            srcDirs 'src'
+        }
+
+        resources {
+            srcDirs 'resources'
+        }
+    }
+    
+    test {
+    	java {
+            srcDirs 'test'
+        }
+    }
+}
+
+repositories {
+	mavenCentral()
+	
+    flatDir {
+        dirs 'libs'
+    }
+    
+    maven {
+        url 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
+    }
+	
+	maven {
+        url = "https://oss.sonatype.org/content/repositories/snapshots/"
+    }
+
+    maven {
+        url 'https://maven.sk89q.com/repo/'
+    }
+    
+    maven {
+    	url 'https://m2.dv8tion.net/releases'
+    }
+    
+    maven {
+        url = 'https://repo.extendedclip.com/content/repositories/placeholderapi/'
+    }
+
+    maven {
+        url 'https://jitpack.io'
+    }
+}
+
+configurations {
+    internalLibs
+    implementation.extendsFrom(internalLibs)
+}
+
+dependencies {
+	testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.2")
+    testImplementation("org.junit.jupiter:junit-jupiter-engine:5.7.2")
+
+    this.addModularCompile('org.spigotmc:spigot-api:1.8.8-R0.1-SNAPSHOT', 'spigot', false)
+    this.addModularCompile('com.googlecode.json-simple:json-simple:1.1.1', 'gson', false)
+    this.addModularCompile('com.sk89q.worldedit:worldedit-bukkit:6.1.4-SNAPSHOT', 'worldedit', true)
+    this.addModularCompile('com.github.LabyMod:legacy-labymod-server-api:master-SNAPSHOT', 'labymodapi', true)
+    this.addModularCompile('net.dv8tion:JDA:4.3.0_334', 'jda', false)
+    this.addModularCompile('com.github.pengrad:java-telegram-bot-api:5.2.0', 'telegramapi', false)
+    this.addModularCompile("me.clip:placeholderapi:2.10.10", "placeholderapi", false)
+    this.addModularCompile("net.luckperms:api:5.3", "luckperms", false)
+	this.addModularCompile('com.github.CuukyOfficial:CFW:master-SNAPSHOT', 'CFW', true)
+
+// Enable if needed
+/*
+    this.addModularInternal('com.github.CuukyOfficial:VaroBanAPI-Client:master-SNAPSHOT', 'banapi', true)
+    this.addModularInternal('com.github.CuukyOfficial:CFW:master-SNAPSHOT', 'CFW', true)
+*/
+}
+
+boolean checkLib(String filePath) {
+    return file('libs/' + filePath + '.jar').exists()
+}
+
+void addModularCompile(String repoName, String fileName, boolean changingB) {
+    if (this.checkLib(fileName))
+        this.dependencies.implementation name: fileName
+    else
+        this.dependencies.implementation (repoName) { changing = changingB }
+}
+
+void addModularInternal(String repoName, String fileName, boolean changingB) {
+    if (this.checkLib(fileName))
+        this.dependencies.internalLibs name: fileName
+    else
+        this.dependencies.internalLibs (repoName) { changing = changingB }
+}
+
+jar {
+    manifest {
+        attributes(
+                'Manifest-Version': '1.0',
+                'Class-Path': '.',
+                'Main-Class': 'net.kettlemc.plugin.MainLauncher',
+        )
+    }
+
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    from {
+        configurations.internalLibs.collect {
+            it.isDirectory() ? it : zipTree(it)
+        }
+    }
+}
+
+processResources {
+	duplicatesStrategy = DuplicatesStrategy.INCLUDE
+    from (sourceSets.main.resources.srcDirs) {
+        filter ReplaceTokens, tokens: [name: "PluginName"]
+        filter ReplaceTokens, tokens: [version: "1.0.0-RELEASE"]
+        filter ReplaceTokens, tokens: [author: "KettleMC"]
+        filter ReplaceTokens, tokens: [main: "net.kettlemc.plugin.Main"]
+    }
+}
+
+test {
+	useJUnitPlatform()
+
+	testLogging {
+        exceptionFormat = 'full'
+        outputs.upToDateWhen { false }
+        showStandardStreams = true
+    }
+}

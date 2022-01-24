@@ -1,0 +1,12 @@
+name: @name@
+author: @author@
+authors: []
+version: @version@
+softdepend: [LuckPerms, PlaceholderAPI, LabyModAPI, TelegramPlugin, PermissionsEx, LabyModAPI]
+loadbefore: []
+api-version: 1.13
+main: @main@
+website: KettleMC.net
+
+commands:
+  
