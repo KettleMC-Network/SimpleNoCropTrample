@@ -3,6 +3,7 @@ package net.kettlemc.nocroptrample.listener;
 import net.kettlemc.nocroptrample.NoCropTramplePlugin;
 import net.kettlemc.nocroptrample.event.CropTrampleEvent;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
@@ -19,6 +20,8 @@ public class TrampleListener implements Listener {
 
     @EventHandler
     public void onMobTrample(EntityInteractEvent event) {
+        if (event.getEntity() instanceof Player)
+            return;
         if (plugin.getConfiguration().isFarmlandsBlock(event.getBlock().getType())) {
             CropTrampleEvent cropTrampleEvent = new CropTrampleEvent(event.getEntity(), CropTrampleEvent.TrampleCause.MOB, event.getBlock());
             Bukkit.getPluginManager().callEvent(cropTrampleEvent);
@@ -30,7 +33,7 @@ public class TrampleListener implements Listener {
     @EventHandler
     public void onPlayerTrample(PlayerInteractEvent event) {
         if (event.getAction() == Action.PHYSICAL && plugin.getConfiguration().isFarmlandsBlock(event.getClickedBlock().getType())) {
-            CropTrampleEvent cropTrampleEvent = new CropTrampleEvent(event.getPlayer(), CropTrampleEvent.TrampleCause.MOB, event.getClickedBlock());
+            CropTrampleEvent cropTrampleEvent = new CropTrampleEvent(event.getPlayer(), CropTrampleEvent.TrampleCause.PLAYER, event.getClickedBlock());
             Bukkit.getPluginManager().callEvent(cropTrampleEvent);
             if (cropTrampleEvent.isCancelled())
                 event.setCancelled(true);
