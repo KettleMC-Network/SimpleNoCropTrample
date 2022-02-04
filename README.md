@@ -38,3 +38,6 @@ public void onTrample(CropTrampleEvent event) {
 ```
 
 `TrampleCause` can either be MOB or PLAYER, depending on what entity tries to destroy the farmland.
+
+## Stats (bStats)
+![](https://bstats.org/signatures/bukkit/simplenocroptrample.svg)
