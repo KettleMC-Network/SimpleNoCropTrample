@@ -2,7 +2,7 @@
 
 Plugin that prevents players/mobs from destroying farmland by jumping on it.
 
-Works with every version from 1.7 to 1.18 and all softwares supporting spigot plugins.
+Works with every version from 1.7 to 1.19 and all softwares supporting spigot plugins.
 
 ## Config
 ```yaml
@@ -38,3 +38,6 @@ public void onTrample(CropTrampleEvent event) {
 ```
 
 `TrampleCause` can either be MOB or PLAYER, depending on what entity tries to destroy the farmland.
+
+## Stats (bStats)
+![](https://bstats.org/signatures/bukkit/simplenocroptrample.svg)
