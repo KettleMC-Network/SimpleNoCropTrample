@@ -2,7 +2,7 @@ name: @name@
 author: @author@
 authors: []
 version: @version@
-softdepend: [LuckPerms, PlaceholderAPI, LabyModAPI, TelegramPlugin, PermissionsEx, LabyModAPI]
+softdepend: []
 loadbefore: []
 api-version: 1.13
 main: @main@
