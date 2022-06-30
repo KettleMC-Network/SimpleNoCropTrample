@@ -10,11 +10,12 @@ public class Configuration {
 
     private BasicConfigurationHandler config;
 
-    private boolean disableMobTrampling, disablePlayerTrampling;
+    private boolean disableMobTrampling, disablePlayerTrampling, enableUpdateChecker;
     private List<Material> farmlandBlocks;
 
     public Configuration() {
         this.config = new BasicConfigurationHandler("plugins/SimpleNoCropTrample/config.yml");
+        this.enableUpdateChecker = this.config.getBool("enable-update-checker", true);
         this.disableMobTrampling = this.config.getBool("disable-mob-trampling", true);
         this.disablePlayerTrampling = this.config.getBool("disable-player-trampling", true);
         this.farmlandBlocks = new ArrayList<>();
@@ -38,6 +39,10 @@ public class Configuration {
 
     public boolean isPlayerTramplingDisabled() {
         return this.disablePlayerTrampling;
+    }
+
+    public boolean checkForUpdates() {
+        return this.enableUpdateChecker;
     }
 
     private boolean isValid(String material) {
